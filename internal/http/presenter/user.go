@@ -6,11 +6,11 @@ import (
 )
 
 type UserPresenter struct {
-	ID       string `json:"id"`
 	Name     string `json:"name"`
-	Username string `json:"usrname"`
+	Username string `json:"username"`
 	Password string `json:"password"`
 	Type     string `json:"type"`
+	Email    string `json:"email"`
 }
 
 type CreateUserResponse struct {
@@ -28,11 +28,11 @@ func (cR *CreateUserResponse) Parse(users []*user.User, err error) *CreateUserRe
 	return &CreateUserResponse{
 		Users: slice.Map(users, func(u *user.User) *UserPresenter {
 			return &UserPresenter{
-				ID:       u.ID,
 				Name:     u.Name,
 				Username: u.Username,
 				Password: u.Password,
-				Type:     u.Type,
+				Type:     string(u.Type),
+				Email:    u.Email,
 			}
 		}),
 		ErrorMessage: errorMessage,

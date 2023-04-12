@@ -11,18 +11,16 @@ run:
 test:
 	go test -v -tags testing ./...
 
+dependencies:
+	go mod download
+
 test-cov:
 	go test -coverprofile=cover.txt ./... && go tool cover -html=cover.txt -o cover.html
+
+up-mongo:
+	docker-compose up -d mongodb
 
 build-mocks:
 	go get github.com/golang/mock/mockgen@v1.6.0
 	go install github.com/golang/mock/mockgen
-	~/go/bin/mockgen -source=product_provider/product_provider.go -destination=product_provider/mock/service.go -package=mock
-	~/go/bin/mockgen -source=product/product.go -destination=product/mock/service.go -package=mock
-
-dependencies:
-	go mod download
-
-
-up-mongo:
-	docker-compose up -d mongodb
+	~/go/bin/mockgen -source=user/user.go -destination=user/mock/service.go -package=mock

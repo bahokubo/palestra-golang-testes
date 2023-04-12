@@ -10,10 +10,18 @@ func NewService(r Repository) *Service {
 	}
 }
 
-func (s *Service) Create(u []*User) ([]*User, error) {
-	if _, err := s.repo.Create(u); err != nil {
+func (s *Service) Create(users []*User) ([]*User, error) {
+	if _, err := s.repo.Create(users); err != nil {
 		return nil, err
 	}
 
-	return u, nil
+	return users, nil
+}
+
+func (s *Service) List() (users []*User, err error) {
+	if _, err = s.repo.List(); err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }
