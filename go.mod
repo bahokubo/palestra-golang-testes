@@ -12,6 +12,8 @@ require (
 	go.mongodb.org/mongo-driver v1.11.4
 )
 
+require github.com/google/uuid v1.3.0 // indirect
+
 require (
 	github.com/bytedance/sonic v1.8.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
@@ -56,4 +58,5 @@ require (
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gorm.io/gorm v1.25.0
 )

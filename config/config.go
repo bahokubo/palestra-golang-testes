@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+
 	"github.com/spf13/viper"
 )
 
@@ -18,7 +19,7 @@ type Environments struct {
 
 func LoadEnvVars() *Environments {
 	viper.SetConfigFile(".env")
-	viper.SetDefault("API_PORT", "8080")
+	viper.SetDefault("API_PORT", "8081")
 	viper.SetDefault("MONGO_ADDRESS", "")
 	viper.SetDefault("DB_NAME", "user-crud")
 	viper.AutomaticEnv()

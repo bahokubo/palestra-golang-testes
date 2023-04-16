@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"user-crud/config"
 	"user-crud/internal/http/gin"
 )
@@ -11,6 +11,6 @@ func main() {
 	r := gin.Handlers(envs)
 	err := r.Run()
 	if err != nil {
-		fmt.Errorf("error fatal")
+		log.Fatalf("error fatal")
 	}
 }
