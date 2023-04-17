@@ -3,12 +3,13 @@ package gin
 import (
 	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"user-crud/config"
 	"user-crud/internal/mongo"
 	"user-crud/user"
 	userRepository "user-crud/user/mongo"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Handlers(envs *config.Environments) *gin.Engine {
@@ -25,7 +26,7 @@ func Handlers(envs *config.Environments) *gin.Engine {
 	fmt.Print(us)
 	v1 := r.Group("/api/v1")
 
-	MakeProductHandler(v1, us)
+	MakeUserHandler(v1, us)
 
 	return r
 }

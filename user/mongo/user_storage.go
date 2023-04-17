@@ -31,7 +31,7 @@ func (us *UserStorage) Create(users []*user.User) ([]*user.User, error) {
 		users[i].ID = uuid.New().String()
 		_, err := us.collection.InsertOne(us.ctx, u)
 		if err != nil {
-			log.Println(fmt.Errorf("[Repository] Create user error: %v", err))
+			fmt.Errorf("[Repository] Create user error: %v", err)
 			return nil, err
 		}
 
@@ -43,7 +43,7 @@ func (us *UserStorage) Create(users []*user.User) ([]*user.User, error) {
 func (us *UserStorage) Update(user *user.User) (*user.User, error) {
 	if err := us.collection.FindOneAndUpdate(
 		us.ctx,
-		bson.D{{"_id", user.ID}},
+		bson.D{{"id", user.ID}},
 		bson.D{{"$set", user}},
 		options.FindOneAndUpdate().SetReturnDocument(1)).
 		Decode(&user); err != nil {
@@ -55,18 +55,6 @@ func (us *UserStorage) Update(user *user.User) (*user.User, error) {
 	return user, nil
 }
 
-func (us *UserStorage) Delete(users []*user.User) ([]*user.User, error) {
-	for _, u := range users {
-		_, err := us.collection.InsertOne(us.ctx, u)
-		if err != nil {
-			log.Println(fmt.Errorf("[Repository] Create user error: %v", err))
-			return nil, err
-		}
-	}
-	log.Println("[Repository] Create() succeeded")
-	return users, nil
-}
-
 func (us *UserStorage) List() ([]*user.User, error) {
 	logData := map[string]string{}
 
@@ -75,7 +63,7 @@ func (us *UserStorage) List() ([]*user.User, error) {
 	})
 
 	if err != nil {
-		log.Println(fmt.Errorf("[Repository] Create user error: %v", err))
+		log.Println(fmt.Errorf("[Repository] List user error: %v", err))
 		return nil, err
 	}
 
@@ -94,4 +82,19 @@ func (us *UserStorage) listUsers(c *mongo.Cursor, logData map[string]string) (us
 	}
 
 	return users, nil
+}
+
+func (us *UserStorage) Delete(id string) (int, error) {
+	fmt.Sprintf("[Repository] Delete user repository starting for id: %s", id)
+
+	result, err := us.collection.DeleteOne(us.ctx, bson.M{"id": id})
+
+	if err != nil {
+		fmt.Sprintf("[Repository] Delete user repository error when trying to destroy: %v for id: %s", err, id)
+		return 0, err
+	}
+
+	fmt.Sprintf("[Repository] Delete user succeeded for id %s", id)
+
+	return int(result.DeletedCount), nil
 }
