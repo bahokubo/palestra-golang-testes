@@ -18,16 +18,16 @@ type User struct {
 
 // Repository interface
 type Repository interface {
-	Create(users []*User) ([]*User, error)
+	Create([]*User) ([]*User, error)
 	List() ([]*User, error)
-	Update(user *User) (*User, error)
+	Update(*User) (*User, error)
 	Delete(id string) (int, error)
 }
 
 // UseCase interface
 type UseCase interface {
-	Create(u []*User) ([]*User, error)
-	List() (users []*User, err error)
-	Update(user *User) (*User, error)
+	Create([]*User) ([]*User, error)
+	List() ([]*User, error)
+	Update(*User) (*User, error)
 	Delete(id string) error
 }

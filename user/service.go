@@ -14,12 +14,12 @@ func NewService(r Repository) *Service {
 	}
 }
 
-func (s *Service) Create(users []*User) ([]*User, error) {
-	if _, err := s.repo.Create(users); err != nil {
+func (s *Service) Create(u []*User) ([]*User, error) {
+	if _, err := s.repo.Create(u); err != nil {
 		return nil, err
 	}
 
-	return users, nil
+	return u, nil
 }
 
 func (s *Service) List() (users []*User, err error) {
@@ -30,12 +30,12 @@ func (s *Service) List() (users []*User, err error) {
 	return users, nil
 }
 
-func (s *Service) Update(user *User) (*User, error) {
-	if _, err := s.repo.Update(user); err != nil {
+func (s *Service) Update(u *User) (*User, error) {
+	if _, err := s.repo.Update(u); err != nil {
 		return nil, err
 	}
 
-	return user, nil
+	return u, nil
 }
 
 func (s *Service) Delete(id string) error {

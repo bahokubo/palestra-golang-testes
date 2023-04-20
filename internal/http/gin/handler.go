@@ -16,9 +16,9 @@ func Handlers(envs *config.Environments) *gin.Engine {
 	r := gin.Default()
 
 	ctx := context.Background()
-	dbcConn, _ := mongo.Open(envs.MongoAddress)
-	db := dbcConn.Database(envs.DBName)
-	userRepository := userRepository.New(db, ctx)
+	dbConn, _ := mongo.Open(envs.MongoAddress)
+	db := dbConn.Database(envs.DBName)
+	userRepository := userRepository.NewUserStorage(db, ctx)
 
 	us := user.NewService(userRepository)
 

@@ -9,17 +9,7 @@ services:
     volumes:
       - mongodb_catalog_data:/data/db
     ports:
-      - 27053:27017
-
-  mongo-express:
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: teste123
-      ME_CONFIG_MONGODB_URL: mongodb://mongodb:27017/
+      - 27017:27017
 
 volumes:
   mongodb_catalog_data:
