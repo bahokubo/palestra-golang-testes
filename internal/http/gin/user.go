@@ -30,7 +30,7 @@ func createUsers(s user.UseCase) gin.HandlerFunc {
 
 		users, err := s.Create(users)
 		if err != nil && len(users) == 0 {
-			log.Println(fmt.Sprintf("[Handler] createUsers error couldn't create users: %v", err))
+			fmt.Printf("[Handler] createUsers error couldn't create users: %v", err)
 			c.String(http.StatusInternalServerError, fmt.Sprintf("couldn't create users: %v", err))
 			return
 		}
@@ -46,17 +46,10 @@ func createUsers(s user.UseCase) gin.HandlerFunc {
 func ListUsers(s user.UseCase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
-		var u []*user.User
-
-		if err := c.BindJSON(&u); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("error handling with body: %v", err))
-			return
-		}
-
 		users, err := s.List()
 		if err != nil && len(users) == 0 {
-			log.Println(fmt.Sprintf("[Handler] ListUsers error couldn't list users: %v", err))
-			c.String(http.StatusInternalServerError, fmt.Sprintf("couldn't create users: %v", err))
+			fmt.Printf("[Handler] ListUsers error couldn't list users: %v", err)
+			c.String(http.StatusInternalServerError, fmt.Sprintf("couldn't list users: %v", err))
 			return
 		}
 
@@ -76,7 +69,7 @@ func updateUsers(s user.UseCase) gin.HandlerFunc {
 		log.Println("[Handler] updateUsers initialize")
 
 		if err := c.BindJSON(&u); err != nil {
-			fmt.Sprintf("[Handler] UpdateUser handling with body error: %v", err)
+			fmt.Printf("[Handler] UpdateUser handling with body error: %v", err)
 			c.String(http.StatusBadRequest, fmt.Sprintf("error handling with body: %v", err))
 			return
 		}
@@ -84,13 +77,13 @@ func updateUsers(s user.UseCase) gin.HandlerFunc {
 		updatedUser, err := s.Update(u)
 
 		if err != nil {
-			fmt.Sprintf("[Handler] UpdateUser error: %v", err)
+			fmt.Printf("[Handler] UpdateUser error: %v", err)
 			c.String(http.StatusNotFound, "User not found")
 			return
 		}
 
 		if err != nil {
-			fmt.Sprintf("[Handler] UpdateUser error: %v", err)
+			fmt.Printf("[Handler] UpdateUser error: %v", err)
 			c.String(http.StatusInternalServerError, fmt.Sprintf("couldn't update user: %v", err))
 			return
 		}
@@ -105,31 +98,31 @@ func deleteUser(s user.UseCase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		uId := c.Param("id")
 
-		fmt.Sprintf("[Handler] deleteUser for product id %s", uId)
+		fmt.Printf("[Handler] deleteUser for product id %s", uId)
 
 		err := s.Delete(uId)
 
 		if err != nil && err.Error() == string(user.UserNotFound) {
-			fmt.Sprintf("[Handler] deleteUser error: %v", err)
+			fmt.Printf("[Handler] deleteUser error: %v", err)
 			c.String(http.StatusNotFound, string(user.UserNotFound))
 			return
 		}
 
 		if err != nil {
-			fmt.Sprintf("[Handler] deleteUser error: %v", err)
+			fmt.Printf("[Handler] deleteUser error: %v", err)
 			c.String(http.StatusInternalServerError, fmt.Sprintf("couldn't delete user: %v", err))
 			return
 		}
 
-		fmt.Sprintf("[Handler] deleteUser succeeded for product id %s", uId)
+		fmt.Printf("[Handler] deleteUser succeeded for product id %s", uId)
 
 		c.String(http.StatusOK, "User deleted")
 	}
 }
 
 func MakeUserHandler(r *gin.RouterGroup, s user.UseCase) {
-	r.Handle(http.MethodPost, "users", createUsers(s))
-	r.Handle(http.MethodGet, "users", ListUsers(s))
-	r.Handle(http.MethodPut, "users", updateUsers(s))
-	r.Handle(http.MethodDelete, "user/:id", deleteUser(s))
+	r.Handle(http.MethodPost, "/users", createUsers(s))
+	r.Handle(http.MethodGet, "/users", ListUsers(s))
+	r.Handle(http.MethodPut, "/users", updateUsers(s))
+	r.Handle(http.MethodDelete, "/user/:id", deleteUser(s))
 }

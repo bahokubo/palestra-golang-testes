@@ -4,20 +4,17 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"user-crud/config"
-	"user-crud/internal/mongo"
 	"user-crud/user"
 	userRepository "user-crud/user/mongo"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func Handlers(envs *config.Environments) *gin.Engine {
+func Handlers(db *mongo.Database) *gin.Engine {
 	r := gin.Default()
 
 	ctx := context.Background()
-	dbConn, _ := mongo.Open(envs.MongoAddress)
-	db := dbConn.Database(envs.DBName)
 	userRepository := userRepository.NewUserStorage(db, ctx)
 
 	us := user.NewService(userRepository)

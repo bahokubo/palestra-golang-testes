@@ -3,13 +3,17 @@ package main
 import (
 	"log"
 	"user-crud/config"
-	"user-crud/internal/http/gin"
+	http "user-crud/internal/http/gin"
+	"user-crud/internal/mongo"
 )
 
 func main() {
 	envs := config.LoadEnvVars()
-	r := gin.Handlers(envs)
-	err := r.Run()
+	dbConn, _ := mongo.Open(envs.MongoAddress)
+	db := dbConn.Database(envs.DBName)
+
+	r := http.Handlers(db)
+	err := r.Run(envs.APIPort)
 	if err != nil {
 		log.Fatalf("error fatal")
 	}
