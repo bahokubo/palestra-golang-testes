@@ -53,8 +53,8 @@ func TestCreate(t *testing.T) {
 			Times(1)
 
 		s := user.NewService(repo)
-		validProducts, err := s.Create([]*user.User{})
-		assert.Nil(t, validProducts)
+		createdUsers, err := s.Create([]*user.User{})
+		assert.Nil(t, createdUsers)
 		assert.ErrorIs(t, expectedError, err)
 	})
 }
@@ -102,57 +102,106 @@ func TestList(t *testing.T) {
 			Times(1)
 
 		s := user.NewService(repo)
-		validProducts, err := s.List()
-		assert.Nil(t, validProducts)
+		listedUsers, err := s.List()
+		assert.Nil(t, listedUsers)
 		assert.ErrorIs(t, expectedError, err)
 	})
 }
 
 func TestUpdate(t *testing.T) {
-	t.Run("it should return all users and list be called for all of them", func(t *testing.T) {
-		expectedUsers := []*user.User{
-			{
-				Name:     "Nichene",
-				Email:    "ni@gmail.com",
-				Type:     "ADMIN",
-				Username: "ni",
-			},
-			{
-				Name:     "Barbara",
-				Email:    "ba@gmail.com",
-				Username: "bcasac",
-				Type:     "USER",
-			},
+	t.Run("it should return updated user", func(t *testing.T) {
+		expectedUser := &user.User{
+			Name:     "Teste",
+			Username: "teste",
+			Password: "1234",
+			Type:     "DBA",
+			Email:    "teste@teste.com",
 		}
 
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepository(ctrl)
 
 		repo.EXPECT().
-			List().
-			Return(expectedUsers, nil)
+			Update(expectedUser).
+			Return(expectedUser, nil)
 
 		s := user.NewService(repo)
 
-		users, err := s.List()
+		user, err := s.Update(expectedUser)
 
 		assert.Nil(t, err)
-		assert.EqualValues(t, expectedUsers, users)
+		assert.EqualValues(t, expectedUser, user)
 	})
 
-	t.Run("it should return the expected repository error", func(t *testing.T) {
+	t.Run("it should return the expected repository error for update", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepository(ctrl)
-		expectedError := errors.New("error when list in repo")
+		expectedError := errors.New("error when update in repo")
+
+		userToUpdate := &user.User{
+			Name:     "Teste",
+			Username: "teste",
+			Password: "1234",
+			Type:     "",
+			Email:    "teste@teste.com",
+		}
 
 		repo.EXPECT().
-			List().
+			Update(userToUpdate).
 			Return(nil, expectedError).
 			Times(1)
 
 		s := user.NewService(repo)
-		validProducts, err := s.List()
-		assert.Nil(t, validProducts)
+		userUpdated, err := s.Update(userToUpdate)
+		assert.Nil(t, userUpdated)
 		assert.ErrorIs(t, expectedError, err)
+	})
+}
+
+func TestDelete(t *testing.T) {
+	t.Run("it should return a message because user was deleted", func(t *testing.T) {
+		userId := "12345"
+
+		ctrl := gomock.NewController(t)
+		repo := mock.NewMockRepository(ctrl)
+		repo.EXPECT().
+			Delete(userId).
+			Return(1, nil)
+
+		s := user.NewService(repo)
+		err := s.Delete(userId)
+
+		assert.Nil(t, err)
+	})
+
+	t.Run("it should return the expected repository error for delete", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		repo := mock.NewMockRepository(ctrl)
+		expectedError := errors.New("error when delete in repo")
+		userId := "wrong string"
+		repo.EXPECT().
+			Delete(userId).
+			Return(1, expectedError).
+			Times(1)
+
+		s := user.NewService(repo)
+		err := s.Delete(userId)
+		assert.ErrorIs(t, expectedError, err)
+	})
+
+	t.Run("it should return a user not found error when try to delete", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		repo := mock.NewMockRepository(ctrl)
+		userId := "wrong string"
+		expectedError := errors.New("error when delete in repo")
+
+		repo.EXPECT().
+			Delete(userId).
+			Return(0, expectedError).
+			Times(1)
+
+		s := user.NewService(repo)
+		err := s.Delete(userId)
+		assert.Errorf(t, err, user.UserNotFound)
 	})
 }
