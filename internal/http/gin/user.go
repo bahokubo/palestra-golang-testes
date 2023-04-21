@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"user-crud/internal/http/presenter"
 	"user-crud/user"
 
@@ -12,7 +13,7 @@ import (
 
 func createUsers(s user.UseCase) gin.HandlerFunc {
 	return func(c *gin.Context) {
-
+		fmt.Println("[Handler] Starting create users")
 		var users []*user.User
 
 		if err := c.BindJSON(&users); err != nil {
@@ -21,8 +22,8 @@ func createUsers(s user.UseCase) gin.HandlerFunc {
 		}
 
 		for i, u := range users {
-			if u.Type != user.ADMIN && u.Type != user.DBA {
-				c.String(http.StatusBadRequest, fmt.Sprintf("this user type is not valid for user position: %v", i))
+			if strings.ToUpper(u.Type) != user.ADMIN && strings.ToUpper(u.Type) != user.DBA {
+				c.String(http.StatusBadRequest, fmt.Sprintf("this user type is not valid: %v", i))
 				return
 			}
 		}

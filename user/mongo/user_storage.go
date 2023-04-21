@@ -27,6 +27,8 @@ func NewUserStorage(client *mongo.Database, ctx context.Context) *UserStorage {
 }
 
 func (us *UserStorage) Create(users []*user.User) ([]*user.User, error) {
+	fmt.Println("[Repository] starting create user")
+
 	for i, u := range users {
 		users[i].ID = uuid.New().String()
 		_, err := us.collection.InsertOne(us.ctx, u)

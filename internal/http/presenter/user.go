@@ -34,7 +34,7 @@ func (cR *CreateUserResponse) Parse(users []*user.User, err error) *CreateUserRe
 				Name:     u.Name,
 				Username: u.Username,
 				Password: u.Password,
-				Type:     string(u.Type),
+				Type:     u.Type,
 				Email:    u.Email,
 			}
 		}),

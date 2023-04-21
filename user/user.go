@@ -1,19 +1,17 @@
 package user
 
-type userType string
-
 const (
 	ADMIN = "ADMIN"
 	DBA   = "DBA"
 )
 
 type User struct {
-	ID       string   `json:"id"`
-	Name     string   `json:"name"`
-	Username string   `json:"username"`
-	Password string   `json:"password"`
-	Type     userType `json:"type"`
-	Email    string   `json:"email"`
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Type     string `json:"type"`
+	Email    string `json:"email"`
 }
 
 // Repository interface
