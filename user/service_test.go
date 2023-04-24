@@ -29,13 +29,11 @@ func TestCreate(t *testing.T) {
 
 		ctrl := gomock.NewController(t)
 		repo := mock.NewMockRepository(ctrl)
-
 		repo.EXPECT().
 			Create(expectedUsers).
 			Return(expectedUsers, nil)
 
 		s := user.NewService(repo)
-
 		users, err := s.Create(expectedUsers)
 
 		assert.Nil(t, err)

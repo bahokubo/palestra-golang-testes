@@ -75,7 +75,7 @@ func (us *UserStorage) List() ([]*user.User, error) {
 func (us *UserStorage) listUsers(c *mongo.Cursor, logData map[string]string) ([]*user.User, error) {
 	var foundUsers []*user.User
 	if err := c.All(us.ctx, &foundUsers); err != nil {
-		log.Println(fmt.Errorf("[Repository] Create user error: %v", err))
+		log.Println(fmt.Errorf("[Repository] ListUsers user error: %v", err))
 		return nil, err
 	}
 
@@ -88,7 +88,7 @@ func (us *UserStorage) Delete(id string) (int, error) {
 	result, err := us.collection.DeleteOne(us.ctx, bson.M{"id": id})
 
 	if err != nil {
-		fmt.Printf("[Repository] Delete user repository error when trying to destroy: %v for id: %s", err, id)
+		fmt.Printf("[Repository] Delete user repository error when trying to delete: %v for id: %s", err, id)
 		return 0, err
 	}
 
