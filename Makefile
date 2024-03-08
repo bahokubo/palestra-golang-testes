@@ -24,3 +24,6 @@ build-mocks:
 	go get github.com/golang/mock/mockgen@v1.6.0
 	go install github.com/golang/mock/mockgen
 	~/go/bin/mockgen -source=user/user.go -destination=user/mock/service.go -package=mock
+
+build:
+	go build cmd/api/main.go
